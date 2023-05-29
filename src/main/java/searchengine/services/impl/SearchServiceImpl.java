@@ -3,6 +3,7 @@ package searchengine.services.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import searchengine.dto.statistics.SearchResults;
 import searchengine.dto.statistics.StatisticsSearch;
 import searchengine.model.IndexSearch;
 import searchengine.model.Lemma;
