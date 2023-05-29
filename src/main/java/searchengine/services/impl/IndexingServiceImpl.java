@@ -58,8 +58,6 @@ public class IndexingServiceImpl implements IndexingService {
             executorService = Executors.newFixedThreadPool(processorCoreCount);
             for (Site site : siteList) {
                 String url = site.getUrl();
-                SitePage sitePage = new SitePage();
-                sitePage.setName(site.getName());
                 log.info("Parsing site: " + site.getName());
                 executorService.submit(new SiteIndexed(pageRepository, siteRepository, lemmaRepository, indexSearchRepository, lemmaParser, indexParser, url, sitesList));
             }
