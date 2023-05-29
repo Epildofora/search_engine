@@ -6,7 +6,6 @@ import searchengine.dto.statistics.DetailedStatisticsItem;
 import searchengine.dto.statistics.StatisticsData;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.dto.statistics.TotalStatistics;
-
 import searchengine.model.SitePage;
 import searchengine.model.Status;
 import searchengine.repository.LemmaRepository;
