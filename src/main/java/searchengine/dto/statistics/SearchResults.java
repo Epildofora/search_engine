@@ -1,9 +1,21 @@
 package searchengine.dto.statistics;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Value
-public class StatisticsResponse {
+import java.util.List;
+
+@Setter
+@Getter
+@AllArgsConstructor
+public class SearchResults {
     private boolean result;
-    private StatisticsData statistics;
+    private int count;
+    private List<StatisticsSearch> data;
+
+    public SearchResults(boolean result) {
+        this.result = result;
+    }
 }
+
