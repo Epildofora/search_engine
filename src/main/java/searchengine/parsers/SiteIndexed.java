@@ -13,7 +13,6 @@ import searchengine.repository.LemmaRepository;
 import searchengine.repository.PageRepository;
 import searchengine.repository.SiteRepository;
 
-
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -47,12 +46,9 @@ public class SiteIndexed implements Runnable {
 
     @Override
     public void run() {
-        if (siteRepository.findByUrl(url) != null) {
-            log.info("Start delete site data - " + url);
-            deleteDataFromSite();
-        }
+        deleteDataFromSite();
         log.info("Indexing - " + url + " " + getName());
-        saveDateSite();
+        SitePage sitePage = saveDateSite();
         try {
             List<StatisticsPage> statisticsPageList = getPageDtoList();
             saveToBase(statisticsPageList);
@@ -60,7 +56,7 @@ public class SiteIndexed implements Runnable {
             indexingWords();
         } catch (InterruptedException e) {
             log.error("Indexing stopped - " + url);
-            errorSite();
+            errorSite(sitePage);
         }
     }
 
@@ -100,12 +96,15 @@ public class SiteIndexed implements Runnable {
 
     private void deleteDataFromSite() {
         SitePage sitePage = siteRepository.findByUrl(url);
-        sitePage.setStatus(Status.INDEXING);
-        sitePage.setName(getName());
-        sitePage.setStatusTime(new Date());
-        siteRepository.save(sitePage);
-        siteRepository.flush();
-        siteRepository.delete(sitePage);
+        if (sitePage != null) {
+            log.info("Start delete site data - " + url);
+            sitePage.setStatus(Status.INDEXING);
+            sitePage.setName(getName());
+            sitePage.setStatusTime(new Date());
+            siteRepository.save(sitePage);
+            siteRepository.flush();
+            siteRepository.delete(sitePage);
+        }
     }
 
     private void indexingWords() throws InterruptedException {
@@ -131,14 +130,14 @@ public class SiteIndexed implements Runnable {
         }
     }
 
-    private void saveDateSite() {
+    private SitePage saveDateSite() {
         SitePage sitePage = new SitePage();
         sitePage.setUrl(url);
         sitePage.setName(getName());
         sitePage.setStatus(Status.INDEXING);
         sitePage.setStatusTime(new Date());
         siteRepository.flush();
-        siteRepository.save(sitePage);
+        return siteRepository.save(sitePage);
     }
 
     private String getName() {
@@ -151,11 +150,11 @@ public class SiteIndexed implements Runnable {
         return "";
     }
 
-    private void errorSite() {
-        SitePage sitePage = new SitePage();
+    private void errorSite(SitePage sitePage) {
         sitePage.setLastError("Indexing stopped");
         sitePage.setStatus(Status.FAILED);
         sitePage.setStatusTime(new Date());
+        siteRepository.flush();
         siteRepository.save(sitePage);
     }
 }
