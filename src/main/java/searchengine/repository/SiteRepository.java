@@ -8,5 +8,4 @@ public interface SiteRepository extends JpaRepository<SitePage, Long> {
     SitePage findByUrl(String url);
     SitePage findByUrl(long id);
     SitePage findByUrl(SitePage site);
-
 }
